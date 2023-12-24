@@ -1,0 +1,20 @@
+body {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: 0;
+}
+
+#gridContainer {
+	display: flex;
+	flex-wrap: wrap;
+	width: 800px;
+	background-color: gray;
+}
+
+.gridItem {
+	width: 80px;
+	height: 80px;
+	font-size: 60px;
+	box-sizing: border-box;
+}
