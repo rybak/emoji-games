@@ -18,11 +18,11 @@ function startGame() {
 	const mineCount = generateMines();
 	console.log("Starting with " + mineCount + " mines.");
 
-	forAllTiles(tile => {
+	forEnumeratedTiles((i, j, tile) => {
 		const gridItem = document.createElement('div');
 		gridItem.className = 'gridItem';
 		gridItem.append(tile);
-		gridContainer.appendChild(gridItem);
+		cells[i][j].append(tile);
 	});
 	refreshEmoji();
 	forEnumeratedTiles((i, j, tile) => {

@@ -16,13 +16,26 @@
 
 const GRID_COLUMNS = 10;
 const GRID_ROWS = 10;
+/* table rows */
+const rows = [];
+/* table cells */
+const cells = [];
+/* elements inside the cells */
 const grid = [];
 const DEBUG = false;
 
 function prepareEmptyGrid() {
+	const table = document.getElementById('gridContainer');
 	for (let i = 0; i < GRID_ROWS; i++) {
 		grid[i] = [];
+		cells[i] = [];
+		rows[i] = document.createElement('tr');
+		table.append(rows[i]);
 	}
+	forGrid((i, j) => {
+		cells[i].push(document.createElement('td'));
+		rows[i].append(cells[i][j]);
+	});
 }
 
 function forGrid(f) {
@@ -89,6 +102,5 @@ function forAllNeighbors(i, j, f) {
 
 document.addEventListener('DOMContentLoaded', function () {
 	prepareEmptyGrid();
-	const gridContainer = document.getElementById('gridContainer');
 	startGame();
 });

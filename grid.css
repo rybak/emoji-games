@@ -6,15 +6,13 @@ body {
 }
 
 #gridContainer {
-	display: flex;
-	flex-wrap: wrap;
-	width: 800px;
+	width: calc(11em + 27px);
+	height: calc(11em + 27px);
 	background-color: gray;
+	border-collapse: collapse;
 }
 
 .gridItem {
-	width: 80px;
-	height: 80px;
-	font-size: 60px;
-	box-sizing: border-box;
+	width: 1.1em;
+	height: 1.1em;
 }
