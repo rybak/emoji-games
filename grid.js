@@ -35,6 +35,12 @@ function prepareEmptyGrid() {
 	forGrid((i, j) => {
 		cells[i].push(document.createElement('td'));
 		rows[i].append(cells[i][j]);
+		const newTile = document.createElement('span');
+		grid[i][j] = newTile;
+		const gridItem = document.createElement('div');
+		gridItem.className = 'gridItem';
+		gridItem.append(newTile);
+		cells[i][j].append(gridItem);
 	});
 }
 

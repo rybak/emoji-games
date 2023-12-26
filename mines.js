@@ -18,12 +18,6 @@ function startGame() {
 	const mineCount = generateMines();
 	console.log("Starting with " + mineCount + " mines.");
 
-	forEnumeratedTiles((i, j, tile) => {
-		const gridItem = document.createElement('div');
-		gridItem.className = 'gridItem';
-		gridItem.append(tile);
-		cells[i][j].append(gridItem);
-	});
 	refreshEmoji();
 	forEnumeratedTiles((i, j, tile) => {
 		tile.oncontextmenu = (e) => {
@@ -53,16 +47,14 @@ function startGame() {
 
 function generateMines() {
 	let count = 0;
-	forGrid((i, j) => {
-		const newTile = document.createElement('span');
-		newTile.dataset.type = "unopened";
-		newTile.dataset.hidden = true;
-		grid[i][j] = newTile;
+	forAllTiles(tile => {
+		tile.dataset.type = "unopened";
+		tile.dataset.hidden = true;
 		if (count >= 10) {
 			return;
 		}
 		if (Math.random() > 0.9) {
-			newTile.dataset.type = "mine";
+			tile.dataset.type = "mine";
 			count++;
 		}
 	});
