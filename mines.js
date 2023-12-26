@@ -50,6 +50,7 @@ function generateMines() {
 	forAllTiles(tile => {
 		tile.dataset.type = "unopened";
 		tile.dataset.hidden = true;
+		delete tile.dataset.flagged;
 		if (count >= 10) {
 			return;
 		}
