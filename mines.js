@@ -22,7 +22,7 @@ function startGame() {
 		const gridItem = document.createElement('div');
 		gridItem.className = 'gridItem';
 		gridItem.append(tile);
-		cells[i][j].append(tile);
+		cells[i][j].append(gridItem);
 	});
 	refreshEmoji();
 	forEnumeratedTiles((i, j, tile) => {
