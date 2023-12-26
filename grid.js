@@ -81,6 +81,7 @@ const TYPES = new Map([
 	["debugMine", "🟧"],
 	["exploded", "💥"],
 	["party", "🎉"],
+	["dead", "💀"],
 ]);
 
 function setTile(tile, emojiType) {

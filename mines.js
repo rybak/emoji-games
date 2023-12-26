@@ -163,6 +163,9 @@ function loseGame(tile) {
 		if (tile.dataset.type == "unopened") {
 			tile.dataset.type = countNeighborMines(i, j);
 		}
+		if (tile.dataset.type == "0") {
+			tile.dataset.type = "dead";
+		}
 		tile.onclick = () => {};
 	});
 	refreshEmoji();
