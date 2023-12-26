@@ -6,13 +6,40 @@ body {
 }
 
 #gridContainer {
-	width: calc(11em + 27px);
-	height: calc(11em + 27px);
+	aspect-ratio: 1 / 1;
 	background-color: gray;
 	border-collapse: collapse;
 }
 
-.gridItem {
-	width: 1.1em;
-	height: 1.1em;
+@media screen and (orientation:landscape) {
+	html {
+		height: 100%;
+	}
+	body {
+		height: 100%;
+	}
+	#gridContainer {
+		height: 90%;
+	}
+	.gridItem {
+		height: 9vh;
+		font-size: 8vh;
+		line-height: 9vh;
+	}
+}
+@media screen and (orientation:portrait) {
+	html {
+		width: 100%;
+	}
+	body {
+		width: 100%;
+	}
+	#gridContainer {
+		width: 90%;
+	}
+	.gridItem {
+		height: 9vw;
+		font-size: 8vw;
+		line-height: 9vw;
+	}
 }
