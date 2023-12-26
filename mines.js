@@ -155,6 +155,11 @@ function countNeighborMines(i, j) {
 	return count;
 }
 
+function disableClicks(tile) {
+	tile.oncontextmenu = () => {};
+	tile.onclick = () => {};
+}
+
 function loseGame(tile) {
 	tile.dataset.type = "exploded";
 	console.log("Lost.");
@@ -166,7 +171,7 @@ function loseGame(tile) {
 		if (tile.dataset.type == "0") {
 			tile.dataset.type = "dead";
 		}
-		tile.onclick = () => {};
+		disableClicks(tile);
 	});
 	refreshEmoji();
 	console.log("Refresh for next game");
@@ -178,7 +183,7 @@ function winGame() {
 		if (tile.dataset.type == "0" || tile.dataset.type == "unopened") {
 			tile.dataset.type = "party";
 		}
-		tile.onclick = () => {};
+		disableClicks(tile);
 	});
 	refreshEmoji();
 	console.log("Refresh for next game");
