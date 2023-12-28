@@ -30,16 +30,7 @@ function startGame() {
 		};
 		tile.onclick = (e) => {
 			console.log("Clicked on ", i, j, tile);
-			tile.dataset.hidden = false;
-			if (isMine(tile)) {
-				loseGame(tile);
-				return;
-			}
-			const count = countNeighborMines(i, j);
-			tile.dataset.type = count;
-			if (count == 0) {
-				propagateEmpty(i, j);
-			}
+			openTile(i, j, tile, mineCount);
 			checkWinningCondition(mineCount);
 			refreshEmoji();
 		};
@@ -61,6 +52,19 @@ function generateMines() {
 		}
 	});
 	return count;
+}
+
+function openTile(i, j, tile, mineCount) {
+	tile.dataset.hidden = false;
+	if (isMine(tile)) {
+		loseGame(tile);
+		return;
+	}
+	const count = countNeighborMines(i, j);
+	tile.dataset.type = count;
+	if (count == 0) {
+		propagateEmpty(i, j);
+	}
 }
 
 function refreshEmoji() {
