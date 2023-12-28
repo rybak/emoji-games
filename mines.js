@@ -25,6 +25,7 @@ function startGame() {
 			console.log("Right-clicked on ", i, j, tile);
 			flipFlag(tile);
 			checkWinningCondition(mineCount);
+			refreshEmoji();
 			return;
 		};
 		tile.onclick = (e) => {
@@ -126,7 +127,6 @@ function flipFlag(tile) {
 	} else {
 		tile.dataset.flagged = true;
 	}
-	refreshEmoji();
 }
 
 function propagateEmpty(i, j) {
