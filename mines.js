@@ -24,6 +24,7 @@ function startGame() {
 			e.preventDefault();
 			console.log("Right-clicked on ", i, j, tile);
 			flipFlag(tile);
+			openNeighborsAroundNumber(i, j, tile, mineCount);
 			checkWinningCondition(mineCount);
 			refreshEmoji();
 			return;
@@ -130,6 +131,32 @@ function flipFlag(tile) {
 		delete tile.dataset.flagged;
 	} else {
 		tile.dataset.flagged = true;
+	}
+}
+
+function openNeighborsAroundNumber(i, j, tile, mineCount) {
+	if (isHidden(tile)) {
+		return;
+	}
+	const numberOnTile = parseInt(tile.dataset.type);
+	console.log("numberOnTile = ", numberOnTile);
+	if (numberOnTile == 0) {
+		return;
+	}
+	let flagCountAround = 0;
+	forAllNeighbors(i, j, (r, c, neighbor) => {
+		if (isFlagged(neighbor)) {
+			flagCountAround++;
+		}
+	});
+	console.log("flagCountAround = ", flagCountAround);
+	if (flagCountAround == numberOnTile) {
+		forAllNeighbors(i, j, (r, c, neighbor) => {
+			if (isFlagged(neighbor)) {
+				return;
+			}
+			openTile(r, c, neighbor, mineCount);
+		});
 	}
 }
 
