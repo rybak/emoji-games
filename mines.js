@@ -55,6 +55,15 @@ function generateMines() {
 	return count;
 }
 
+function updateTileNumber(i, j, tile) {
+	if (isMine(tile)) {
+		return NaN;
+	}
+	const count = countNeighborMines(i, j);
+	tile.dataset.type = mineNumberToCssClass(count);
+	return count;
+}
+
 function openTile(i, j, tile, mineCount) {
 	tile.dataset.hidden = false;
 	if (isMine(tile)) {
@@ -64,8 +73,7 @@ function openTile(i, j, tile, mineCount) {
 	if (tile.dataset.type == "dead") {
 		return;
 	}
-	const count = countNeighborMines(i, j);
-	tile.dataset.type = count;
+	const count = updateTileNumber(i, j, tile);
 	if (count == 0) {
 		propagateEmpty(i, j);
 	}
@@ -141,7 +149,7 @@ function openNeighborsAroundNumber(i, j, tile, mineCount) {
 	if (isHidden(tile)) {
 		return;
 	}
-	const numberOnTile = parseInt(tile.dataset.type);
+	const numberOnTile = getNumberFromTile(tile);
 	console.log("numberOnTile = ", numberOnTile);
 	if (numberOnTile == 0) {
 		return;
@@ -171,9 +179,8 @@ function propagateEmpty(i, j) {
 		if (isMine(neighbor)) {
 			return;
 		}
-		const n = countNeighborMines(r, c);
 		neighbor.dataset.hidden = false;
-		neighbor.dataset.type = n;
+		const n = updateTileNumber(r, c, neighbor);
 		if (n == 0) {
 			propagateEmpty(r, c);
 		}
@@ -201,9 +208,9 @@ function loseGame(tile) {
 	forEnumeratedTiles((i, j, tile) => {
 		tile.dataset.hidden = false;
 		if (tile.dataset.type == "unopened") {
-			tile.dataset.type = countNeighborMines(i, j);
+			updateTileNumber(i, j, tile);
 		}
-		if (tile.dataset.type == "0") {
+		if (tile.dataset.type == mineNumberToCssClass(0)) {
 			tile.dataset.type = "dead";
 		}
 		disableClicks(tile);
@@ -212,10 +219,17 @@ function loseGame(tile) {
 	console.log("Refresh for next game");
 }
 
+function mineNumberToCssClass(n) {
+	return "number" + n;
+}
+function getNumberFromTile(tile) {
+	return parseInt(tile.dataset.type.slice(6));
+}
+
 function winGame() {
 	console.log("Won.");
 	forAllTiles(tile => {
-		if (tile.dataset.type == "0" || tile.dataset.type == "unopened") {
+		if (tile.dataset.type == mineNumberToCssClass(0) || tile.dataset.type == "unopened") {
 			tile.dataset.type = "party";
 		}
 		disableClicks(tile);

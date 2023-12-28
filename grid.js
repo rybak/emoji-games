@@ -85,11 +85,7 @@ const TYPES = new Map([
 ]);
 
 function setTile(tile, emojiType) {
-	if (tile.dataset.previousRender === emojiType) {
-		return;
-	}
-	tile.replaceChildren(document.createTextNode(TYPES.get(emojiType)));
-	tile.dataset.previousRender = emojiType;
+	tile.className = emojiType;
 }
 
 function forAllNeighbors(i, j, f) {
