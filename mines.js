@@ -61,6 +61,9 @@ function openTile(i, j, tile, mineCount) {
 		loseGame(tile);
 		return;
 	}
+	if (tile.dataset.type == "dead") {
+		return;
+	}
 	const count = countNeighborMines(i, j);
 	tile.dataset.type = count;
 	if (count == 0) {
