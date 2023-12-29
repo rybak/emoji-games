@@ -66,6 +66,7 @@ function updateTileNumber(i, j, tile) {
 
 function openTile(i, j, tile, mineCount) {
 	tile.dataset.hidden = false;
+	delete tile.dataset.flagged;
 	if (isMine(tile)) {
 		loseGame(tile);
 		return;
