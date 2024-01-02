@@ -14,77 +14,82 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-const GRID_COLUMNS = 10;
-const GRID_ROWS = 10;
-/* table rows */
-const rows = [];
-/* table cells */
-const cells = [];
-/* elements inside the cells */
-const grid = [];
 const DEBUG = false;
 
-function prepareEmptyGrid() {
-	const table = document.getElementById('gridContainer');
-	for (let i = 0; i < GRID_ROWS; i++) {
-		grid[i] = [];
-		cells[i] = [];
-		rows[i] = document.createElement('tr');
-		table.append(rows[i]);
-	}
-	forGrid((i, j) => {
-		cells[i].push(document.createElement('td'));
-		rows[i].append(cells[i][j]);
-		const newTile = document.createElement('span');
-		grid[i][j] = newTile;
-		const gridItem = document.createElement('div');
-		gridItem.className = 'gridItem';
-		gridItem.append(newTile);
-		cells[i][j].append(gridItem);
-	});
-}
+class Grid {
+	#rowCount;
+	#columnCount;
+	/**
+	 * Two-dimensional array of tiles on the grid.
+	 */
+	#grid = [];
 
-function forGrid(f) {
-	for (let i = 0; i < GRID_ROWS; i++) {
-		for (let j = 0; j < GRID_COLUMNS; j++) {
-			f(i, j);
+	constructor(rowCount, columnCount, table) {
+		this.#rowCount = rowCount;
+		this.#columnCount = columnCount;
+		/**
+		 * <tr> elements -- rows of the <table> that render the grid.
+		 */
+		const rows = [];
+		/**
+		 * Individual <td> elements -- cells of the <table>.
+		 */
+		const cells = [];
+		for (let i = 0; i < rowCount; i++) {
+			this.#grid[i] = [];
+			cells[i] = [];
+			rows[i] = document.createElement('tr');
+			table.append(rows[i]);
+		}
+		this.forGrid((i, j) => {
+			cells[i].push(document.createElement('td'));
+			rows[i].append(cells[i][j]);
+			const newTile = document.createElement('span');
+			this.#grid[i][j] = newTile;
+			const gridItem = document.createElement('div');
+			gridItem.className = 'gridItem';
+			gridItem.append(newTile);
+			cells[i][j].append(gridItem);
+		});
+	}
+
+	forGrid(f) {
+		for (let i = 0; i < this.#rowCount; i++) {
+			for (let j = 0; j < this.#columnCount; j++) {
+				f(i, j);
+			}
 		}
 	}
-}
 
-function forEnumeratedTiles(f) {
-	forGrid((i, j) => {
-		const tile = grid[i][j];
-		f(i, j, tile);
-	});
-}
+	forEnumeratedTiles(f) {
+		this.forGrid((i, j) => {
+			const tile = this.#grid[i][j];
+			f(i, j, tile);
+		});
+	}
 
-function forAllTiles(f) {
-	forEnumeratedTiles((i, j, tile) => {
-		f(tile);
-	});
+	forAllTiles(f) {
+		this.forEnumeratedTiles((i, j, tile) => {
+			f(tile);
+		});
+	}
+
+	forAllNeighbors(i, j, f) {
+		const minRow = Math.max(i - 1, 0);
+		const maxRow = Math.min(i + 1, this.#rowCount - 1);
+		const minCol = Math.max(j - 1, 0);
+		const maxCol = Math.min(j + 1, this.#columnCount - 1);
+		for (let row = minRow; row <= maxRow; row++) {
+			for (let col = minCol; col <= maxCol; col++) {
+				if (row == i && col == j) {
+					continue;
+				}
+				f(row, col, this.#grid[row][col]);
+			}
+		}
+	}
 }
 
 function setTile(tile, emojiType) {
 	tile.className = emojiType;
 }
-
-function forAllNeighbors(i, j, f) {
-	const minRow = Math.max(i - 1, 0);
-	const maxRow = Math.min(i + 1, GRID_ROWS - 1);
-	const minCol = Math.max(j - 1, 0);
-	const maxCol = Math.min(j + 1, GRID_COLUMNS - 1);
-	for (let row = minRow; row <= maxRow; row++) {
-		for (let col = minCol; col <= maxCol; col++) {
-			if (row == i && col == j) {
-				continue;
-			}
-			f(row, col, grid[row][col]);
-		}
-	}
-}
-
-document.addEventListener('DOMContentLoaded', function () {
-	prepareEmptyGrid();
-	startGame();
-});

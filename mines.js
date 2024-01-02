@@ -14,12 +14,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+const GRID_COLUMNS = 10;
+const GRID_ROWS = 10;
+let g;
+
 function startGame() {
 	const mineCount = generateMines();
 	console.log("Starting with " + mineCount + " mines.");
 
 	refreshEmoji();
-	forEnumeratedTiles((i, j, tile) => {
+	g.forEnumeratedTiles((i, j, tile) => {
 		tile.oncontextmenu = (e) => {
 			e.preventDefault();
 			console.log("Right-clicked on ", i, j, tile);
@@ -40,7 +44,7 @@ function startGame() {
 
 function generateMines() {
 	let count = 0;
-	forAllTiles(tile => {
+	g.forAllTiles(tile => {
 		tile.dataset.type = "unopened";
 		tile.dataset.hidden = true;
 		delete tile.dataset.flagged;
@@ -81,7 +85,7 @@ function openTile(i, j, tile, mineCount) {
 }
 
 function refreshEmoji() {
-	forAllTiles(tile => {
+	g.forAllTiles(tile => {
 		if (isExploded(tile)) {
 			setTile(tile, "exploded");
 			return;
@@ -114,7 +118,7 @@ function isHidden(tile) {
 }
 function countHidden() {
 	let count = 0;
-	forAllTiles(tile => {
+	g.forAllTiles(tile => {
 		if (isHidden(tile)) {
 			count++;
 		}
@@ -127,7 +131,7 @@ function isFlagged(tile) {
 }
 function countFlaggedMines(tile) {
 	let count = 0;
-	forAllTiles(tile => {
+	g.forAllTiles(tile => {
 		if (isMine(tile) && isFlagged(tile)) {
 			count++;
 		}
@@ -156,14 +160,14 @@ function openNeighborsAroundNumber(i, j, tile, mineCount) {
 		return;
 	}
 	let flagCountAround = 0;
-	forAllNeighbors(i, j, (r, c, neighbor) => {
+	g.forAllNeighbors(i, j, (r, c, neighbor) => {
 		if (isFlagged(neighbor)) {
 			flagCountAround++;
 		}
 	});
 	console.log("flagCountAround = ", flagCountAround);
 	if (flagCountAround == numberOnTile) {
-		forAllNeighbors(i, j, (r, c, neighbor) => {
+		g.forAllNeighbors(i, j, (r, c, neighbor) => {
 			if (isFlagged(neighbor)) {
 				return;
 			}
@@ -173,7 +177,7 @@ function openNeighborsAroundNumber(i, j, tile, mineCount) {
 }
 
 function propagateEmpty(i, j) {
-	forAllNeighbors(i, j, (r, c, neighbor) => {
+	g.forAllNeighbors(i, j, (r, c, neighbor) => {
 		if (!isHidden(neighbor)) {
 			return;
 		}
@@ -190,7 +194,7 @@ function propagateEmpty(i, j) {
 
 function countNeighborMines(i, j) {
 	let count = 0;
-	forAllNeighbors(i, j, (r, c, neighbor) => {
+	g.forAllNeighbors(i, j, (r, c, neighbor) => {
 		if (isMine(neighbor)) {
 			count++;
 		}
@@ -206,7 +210,7 @@ function disableClicks(tile) {
 function loseGame(tile) {
 	tile.dataset.type = "exploded";
 	console.log("Lost.");
-	forEnumeratedTiles((i, j, tile) => {
+	g.forEnumeratedTiles((i, j, tile) => {
 		tile.dataset.hidden = false;
 		if (tile.dataset.type == "unopened") {
 			updateTileNumber(i, j, tile);
@@ -229,7 +233,7 @@ function getNumberFromTile(tile) {
 
 function winGame() {
 	console.log("Won.");
-	forAllTiles(tile => {
+	g.forAllTiles(tile => {
 		if (tile.dataset.type == mineNumberToCssClass(0) || tile.dataset.type == "unopened") {
 			tile.dataset.type = "party";
 		}
@@ -247,3 +251,9 @@ function checkWinningCondition(mineCount) {
 		return;
 	}
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+	const table = document.getElementById('gridContainer');
+	g = new Grid(GRID_ROWS, GRID_COLUMNS, table);
+	startGame();
+});
