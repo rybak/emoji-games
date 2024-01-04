@@ -113,6 +113,14 @@ class Grid {
 			}
 		}
 	}
+
+	getRowCount() {
+		return this.#rowCount;
+	}
+
+	getColumnCount() {
+		return this.#columnCount;
+	}
 }
 
 function setTile(tile, emojiType) {
