@@ -21,11 +21,15 @@ body {
 @media screen and (orientation:landscape) {
 	#gridContainer {
 		height: 90%;
+		/* workaround for bug in Safari */
+		min-width: 85vh;
 	}
 }
 @media screen and (orientation:portrait) {
 	#gridContainer {
 		width: 90%;
+		/* workaround for bug in Safari */
+		aspect-ratio: unset !important;
 	}
 }
 
