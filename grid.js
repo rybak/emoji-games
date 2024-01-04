@@ -65,25 +65,6 @@ function forAllTiles(f) {
 	});
 }
 
-const TYPES = new Map([
-	["mine", "💣"],
-	["flag", "🚩"],
-	["hidden", "⬛"],
-	["0", "⬜"],
-	["1", "\u0031\uFE0F\u20E3"],
-	["2", "\u0032\uFE0F\u20E3"],
-	["3", "\u0033\uFE0F\u20E3"],
-	["4", "\u0034\uFE0F\u20E3"],
-	["5", "\u0035\uFE0F\u20E3"],
-	["6", "\u0036\uFE0F\u20E3"],
-	["7", "\u0037\uFE0F\u20E3"],
-	["8", "\u0038\uFE0F\u20E3"],
-	["debugMine", "🟧"],
-	["exploded", "💥"],
-	["party", "🎉"],
-	["dead", "💀"],
-]);
-
 function setTile(tile, emojiType) {
 	tile.className = emojiType;
 }
