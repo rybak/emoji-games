@@ -18,6 +18,7 @@ let g;
 const GRID_ROWS = 6;
 const GRID_COLUMNS = 5;
 const EMOJI_STYLESHEET_ID = 'theEmojiStylesheet';
+const DEBUG_SHUFFLING = false;
 
 /**
  * Array of opened tiles, which are still in play.
@@ -41,6 +42,12 @@ function startGame() {
 			refreshEmoji();
 		};
 	});
+	if (DEBUG_SHUFFLING) {
+		g.forAllTiles(tile => {
+			tile.dataset.hidden = false;
+		});
+		refreshEmoji();
+	}
 }
 
 const EMOJIS = [
