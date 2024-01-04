@@ -16,6 +16,8 @@
 
 const DEBUG = false;
 
+const GRID_SIZING_STYLE_ID = "theGridSizingStyle";
+
 class Grid {
 	#rowCount;
 	#columnCount;
@@ -51,6 +53,29 @@ class Grid {
 			gridItem.append(newTile);
 			cells[i][j].append(gridItem);
 		});
+		const styleSheet = getStyleSheet(GRID_SIZING_STYLE_ID);
+		styleSheet.innerText = this.#generateSizingStyle();
+	}
+
+	#generateSizingStyle() {
+		const landscapeLength = (100 - 10) / this.#rowCount;
+		const portraitLength = (100 - 10) / this.#columnCount;
+		function orientedStyle(hw, orientation, length) {
+			const gridItemLineHeight = length - 1;
+			const gridItemFontSize = length * 8 / 9;
+			return `@media screen and (orientation:${orientation}) {
+				.gridItem {
+					height: ${length}v${hw};
+					font-size: ${gridItemFontSize}v${hw};
+					line-height: ${gridItemLineHeight}v${hw};
+				}
+			}`;
+		}
+		const landscapeStyle = orientedStyle('h', 'landscape', landscapeLength);
+		const portraitStyle = orientedStyle('w', 'portrait', portraitLength);
+		return `#gridContainer {
+				aspect-ratio: ${this.#columnCount} / ${this.#rowCount};
+			}` + landscapeStyle + portraitStyle;
 	}
 
 	forGrid(f) {
@@ -92,4 +117,15 @@ class Grid {
 
 function setTile(tile, emojiType) {
 	tile.className = emojiType;
+}
+
+function getStyleSheet(id) {
+	const maybeExisting = document.getElementById(id);
+	if (maybeExisting) {
+		return maybeExisting;
+	}
+	const newStyleSheet = document.createElement("style");
+	newStyleSheet.id = id;
+	document.head.appendChild(newStyleSheet);
+	return newStyleSheet;
 }

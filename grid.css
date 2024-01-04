@@ -22,20 +22,10 @@ body {
 	#gridContainer {
 		height: 90%;
 	}
-	.gridItem {
-		height: 9vh;
-		font-size: 8vh;
-		line-height: 9vh;
-	}
 }
 @media screen and (orientation:portrait) {
 	#gridContainer {
 		width: 90%;
-	}
-	.gridItem {
-		height: 9vw;
-		font-size: 8vw;
-		line-height: 9vw;
 	}
 }
 
