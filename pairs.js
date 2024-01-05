@@ -36,7 +36,7 @@ function startGame() {
 		tile.onclick = (e) => {
 			console.log("Clicked on ", i, j, tile);
 			openTile(tile);
-			checkWinningCondition(pairsNeeded);
+			checkWinningCondition(i, j, tile);
 		};
 	});
 }
@@ -200,32 +200,63 @@ function getNumberFromTile(tile) {
 	return parseInt(tile.dataset.type.slice(6));
 }
 
-function winGame() {
-	console.log("Won.");
-	const partyEmoji = randomInArray(EMOJIS_PARTY);
-	let animationMultiplier = 200;
-	if (DEBUG) {
-		animationMultiplier = 1000;
+function flipDownPartyFlipUp(partyEmoji, tile) {
+	tile.classList.remove('frontUp');
+	setTimeout(() => {
+		tile.querySelector('.frontEmoji').replaceChildren(document.createTextNode(partyEmoji));
+	}, 200);
+	setTimeout(() => {
+		tile.classList.add('frontUp');
+	}, 500);
+}
+
+function manhattanDistance(i1, j1, i2, j2) {
+	return Math.abs(i1 - i2) + Math.abs(j1 - j2);
+}
+
+const WIN_ANIMATIONS = [
+	function () {
+		const partyEmoji = randomInArray(EMOJIS_PARTY);
+		let animationMultiplier = 200;
+		if (DEBUG) {
+			animationMultiplier = 1000;
+		}
+		g.forEnumeratedTiles((i, j, tile) => {
+			disableClicks(tile);
+			setTimeout(() => {
+				flipDownPartyFlipUp(partyEmoji, tile);
+			}, (i + j) * animationMultiplier + 500);
+		});
+
+	},
+	function (winI, winJ, winTile) {
+		const partyEmoji = randomInArray(EMOJIS_PARTY);
+		let animationMultiplier = 200;
+		if (DEBUG) {
+			animationMultiplier = 1000;
+		}
+		g.forAllTiles(tile => {
+			disableClicks(tile);
+		});
+		g.forEnumeratedTiles((i, j, tile) => {
+			setTimeout(() => {
+				flipDownPartyFlipUp(partyEmoji, tile);
+			}, manhattanDistance(winI, winJ, i, j) * animationMultiplier + 500);
+		});
 	}
-	g.forEnumeratedTiles((i, j, tile) => {
-		disableClicks(tile);
-		setTimeout(() => {
-			tile.classList.remove('frontUp');
-			setTimeout(() => {
-				tile.querySelector('.frontEmoji').replaceChildren(document.createTextNode(partyEmoji));
-			}, 200);
-			setTimeout(() => {
-				tile.classList.add('frontUp');
-			}, 500);
-		}, (i + j) * animationMultiplier + 500);
-	});
+];
+
+function winGame(i, j, tile) {
+	console.log("Won.");
+	const winAnimation = randomInArray(WIN_ANIMATIONS);
+	winAnimation(i, j, tile);
 	console.log("Refresh for next game");
 }
 
-function checkWinningCondition() {
+function checkWinningCondition(i, j, tile) {
 	const stillHidden = countHidden();
 	if (stillHidden == 0) {
-		winGame();
+		winGame(i, j, tile);
 	}
 }
 
