@@ -221,6 +221,11 @@ function squareCircleDistance(i1, j1, i2, j2) {
 	const vertical = Math.abs(j1 - j2);
 	return 2 * Math.max(horizontal, vertical);
 }
+function crossDistance(i1, j1, i2, j2) {
+	const horizontal = Math.abs(i1 - i2);
+	const vertical = Math.abs(j1 - j2);
+	return 2 * Math.min(horizontal, vertical);
+}
 
 function winAnimationByWinDistance(winI, winJ, winDistanceFn) {
 	const partyEmoji = randomInArray(EMOJIS_PARTY);
@@ -245,6 +250,9 @@ const WIN_ANIMATIONS = [
 	},
 	function (winI, winJ) {
 		winAnimationByWinDistance(winI, winJ, squareCircleDistance);
+	},
+	function (winI, winJ) {
+		winAnimationByWinDistance(winI, winJ, crossDistance);
 	},
 ];
 
