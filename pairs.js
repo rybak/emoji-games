@@ -216,6 +216,11 @@ function secondDistance(ignored1, ignored2, i2, j2) {
 function manhattanDistance(i1, j1, i2, j2) {
 	return Math.abs(i1 - i2) + Math.abs(j1 - j2);
 }
+function squareCircleDistance(i1, j1, i2, j2) {
+	const horizontal = Math.abs(i1 - i2);
+	const vertical = Math.abs(j1 - j2);
+	return 2 * Math.max(horizontal, vertical);
+}
 
 function winAnimationByWinDistance(winI, winJ, winDistanceFn) {
 	const partyEmoji = randomInArray(EMOJIS_PARTY);
@@ -237,6 +242,9 @@ const WIN_ANIMATIONS = [
 	},
 	function (winI, winJ, winTile) {
 		winAnimationByWinDistance(winI, winJ, manhattanDistance);
+	},
+	function (winI, winJ, winTile) {
+		winAnimationByWinDistance(winI, winJ, squareCircleDistance);
 	},
 ];
 
