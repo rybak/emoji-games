@@ -217,7 +217,7 @@ function winGame() {
 			setTimeout(() => {
 				tile.classList.add('frontUp');
 			}, 500);
-		}, (i + j) * animationMultiplier);
+		}, (i + j) * animationMultiplier + 500);
 	});
 	console.log("Refresh for next game");
 }
