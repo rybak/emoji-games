@@ -29,12 +29,7 @@ body {
 	}
 }
 
+/* align the cards on the tiles on the grid */
 .gridItem {
-	position: relative;
-}
-
-.gridItem span::after {
-	position: absolute;
-	top: 0;
-	left: 0;
+	text-align: center;
 }

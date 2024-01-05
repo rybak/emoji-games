@@ -13,11 +13,6 @@
 	width: 100%;
 }
 
-/* align the cards on the tiles on the grid */
-.gridItem {
-	text-align: center;
-}
-
 /* the emoji on card's face is smaller than the card itself */
 .front .frontEmoji {
 	font-size: 80%;
