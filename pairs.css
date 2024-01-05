@@ -30,9 +30,12 @@
 /*
  * 3D-flip CSS code adapted from https://stackoverflow.com/a/41462226/1083697
  */
+.gridItem {
+	position: relative;
+}
 .front,
 .back {
-	position: absolute;
+	position: absolute; /* needed to put the front and back sides of the card on top of each other */
 	width: 100%;
 	height: 100%;
 	transition: transform 0.5s;
