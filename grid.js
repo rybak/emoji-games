@@ -66,6 +66,7 @@ class Grid {
 			return `@media screen and (orientation:${orientation}) {
 				.gridItem {
 					height: ${length}v${hw};
+					width: ${length}v${hw};
 					font-size: ${gridItemFontSize}v${hw};
 					line-height: ${gridItemLineHeight}v${hw};
 				}

@@ -16,6 +16,8 @@
 /* the emoji on card's face is smaller than the card itself */
 .front .frontEmoji {
 	font-size: 80%;
+	width: 80%;
+	margin: auto;
 }
 /* align the backdrop of the card's face with the card */
 .front .frontBackground {
