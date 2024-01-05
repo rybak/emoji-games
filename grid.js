@@ -121,6 +121,13 @@ class Grid {
 	getColumnCount() {
 		return this.#columnCount;
 	}
+
+	forTile(i, j, f) {
+		if (i < 0 || j < 0 || i >= this.#rowCount || j >= this.#columnCount) {
+			return;
+		}
+		f(this.#grid[i][j]);
+	}
 }
 
 function setTile(tile, emojiType) {

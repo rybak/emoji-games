@@ -200,14 +200,14 @@ function getNumberFromTile(tile) {
 	return parseInt(tile.dataset.type.slice(6));
 }
 
-function flipDownPartyFlipUp(partyEmoji, tile) {
+function flipDownPartyFlipUp(partyEmoji, tile, upDelay) {
 	tile.classList.remove('frontUp');
 	setTimeout(() => {
 		tile.querySelector('.frontEmoji').replaceChildren(document.createTextNode(partyEmoji));
 	}, 200);
 	setTimeout(() => {
 		tile.classList.add('frontUp');
-	}, 500);
+	}, 200 + upDelay);
 }
 
 function secondDistance(ignored1, ignored2, i2, j2) {
@@ -219,40 +219,92 @@ function manhattanDistance(i1, j1, i2, j2) {
 function squareCircleDistance(i1, j1, i2, j2) {
 	const horizontal = Math.abs(i1 - i2);
 	const vertical = Math.abs(j1 - j2);
-	return 2 * Math.max(horizontal, vertical);
+	return Math.max(horizontal, vertical);
 }
 function crossDistance(i1, j1, i2, j2) {
 	const horizontal = Math.abs(i1 - i2);
 	const vertical = Math.abs(j1 - j2);
-	return 2 * Math.min(horizontal, vertical);
+	return Math.min(horizontal, vertical);
 }
 
-function winAnimationByWinDistance(winI, winJ, winDistanceFn) {
+function winAnimationByWinDistance(winI, winJ, winDistanceFn, multiplier) {
 	const partyEmoji = randomInArray(EMOJIS_PARTY);
-	let animationMultiplier = 200;
+	let animationMultiplier = 200 * multiplier;
 	if (DEBUG) {
-		animationMultiplier = 1000;
+		animationMultiplier = 1000 * multiplier;
 	}
 	g.forEnumeratedTiles((i, j, tile) => {
 		disableClicks(tile);
 		setTimeout(() => {
-			flipDownPartyFlipUp(partyEmoji, tile);
+			flipDownPartyFlipUp(partyEmoji, tile, 300);
 		}, winDistanceFn(winI, winJ, i, j) * animationMultiplier + 500);
 	});
 }
 
 const WIN_ANIMATIONS = [
 	function (winI, winJ) {
-		winAnimationByWinDistance(winI, winJ, secondDistance);
+		winAnimationByWinDistance(winI, winJ, secondDistance, 1);
 	},
 	function (winI, winJ) {
-		winAnimationByWinDistance(winI, winJ, manhattanDistance);
+		winAnimationByWinDistance(winI, winJ, manhattanDistance, 1.2);
 	},
 	function (winI, winJ) {
-		winAnimationByWinDistance(winI, winJ, squareCircleDistance);
+		winAnimationByWinDistance(winI, winJ, squareCircleDistance, 2);
 	},
 	function (winI, winJ) {
-		winAnimationByWinDistance(winI, winJ, crossDistance);
+		winAnimationByWinDistance(winI, winJ, crossDistance, 2.5);
+	},
+
+	/*
+	 * Spiral animation.
+	 *
+	 * Image https://i.stack.imgur.com/LTTO7.png was used to construct the formulas.
+	 * The image comes from https://math.stackexchange.com/a/3162022/102687
+	 *
+	 * See also https://oeis.org/A174344
+	 */
+	function (winI, winJ) {
+		const partyEmoji = randomInArray(EMOJIS_PARTY);
+		let animationMultiplier = 50;
+		const size = g.getRowCount() * g.getColumnCount();
+		g.forEnumeratedTiles((i, j, tile) => {
+			let n;
+			disableClicks(tile);
+			const layer = squareCircleDistance(winI, winJ, i, j);
+			const previousNumber = 4 * (layer - 1) * layer;
+			if (layer == 0) {
+				// winI, winJ
+				n = 0;
+			} else if ((j - winJ) == layer && (i - winI) != layer) {
+				// 49 -> 56
+				n = previousNumber + layer     + (winI - i);
+			} else if ((i - winI) == -layer) {
+				// 56 -> 64
+				n = previousNumber + 3 * layer + (winJ - j);
+			} else if ((j - winJ) == -layer) {
+				// 64 -> 72
+				n = previousNumber + 5 * layer + (i - winI);
+			} else if ((i - winI) == layer) {
+				// 72 -> 80
+				n = previousNumber + 7 * layer + (j - winJ);
+			} else {
+				console.error("Cannot find n for", i, j, tile);
+				n = 50;
+			}
+			if (n > size * 1.5) {
+				// cap the spiral, don't wait for the far away layers
+				n = size * 1.5;
+			}
+			if (false) {
+				const debug = document.createElement('span');
+				debug.append('' + n);
+				debug.style = `position:absolute; z-index:100; left:10px; top:10px; font-size:30%;`;
+				tile.append(debug);
+			}
+			setTimeout(() => {
+				flipDownPartyFlipUp(partyEmoji, tile, 500);
+			}, (Math.pow(n, 0.9) * animationMultiplier) + 100);
+		});
 	},
 ];
 
