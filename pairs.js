@@ -72,8 +72,12 @@ function shuffle(a) {
 	}
 }
 
+function randomZeroTo(n) {
+	return Math.floor(Math.random() * n);
+}
+
 function randomInArray(a) {
-	return a[Math.floor(Math.random() * a.length)];
+	return a[randomZeroTo(a.length)];
 }
 
 function replaceCard(tile, emoji, squareEmoji) {
