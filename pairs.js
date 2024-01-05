@@ -326,12 +326,55 @@ function checkWinningCondition(i, j) {
 	}
 }
 
+function addSolver() {
+	const animationMultiplier = 120;
+	const controlsContainer = document.getElementById('controls');
+	const solveButton = document.createElement('button');
+	solveButton.innerText = "▶️";
+	solveButton.onclick = () => {
+		let count = 0;
+		g.forEnumeratedTiles((i, j, tile) => {
+			if (!isHidden(tile)) {
+				return;
+			}
+			count++;
+			const emoji = tile.dataset.emoji;
+			for (let r = i; r < g.getRowCount(); r++) {
+				for (let c = 0; c < g.getColumnCount(); c++) {
+					if (r == i && c == j) {
+						continue;
+					}
+					g.forTile(r, c, candidateTile => {
+						if (emoji == candidateTile.dataset.emoji) {
+							setTimeout(() => {
+								openTile(tile);
+							}, count * animationMultiplier);
+							setTimeout(() => {
+								openTile(candidateTile);
+							}, count * animationMultiplier + animationMultiplier / 10);
+						}
+					});
+				}
+			}
+		});
+		setTimeout(() => {
+			const i = randomZeroTo(g.getRowCount());
+			const j = randomZeroTo(g.getColumnCount());
+			checkWinningCondition(i, j);
+		}, count * animationMultiplier + 200);
+	};
+	controlsContainer.append(solveButton);
+}
+
 document.addEventListener('DOMContentLoaded', function () {
 	const table = document.getElementById('gridContainer');
 	if (!DEBUG) {
 		g = new Grid(GRID_ROWS, GRID_COLUMNS, table);
 	} else {
 		g = new Grid(3, 2, table);
+	}
+	if (false) {
+		addSolver();
 	}
 	startGame();
 });
