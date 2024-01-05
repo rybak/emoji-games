@@ -57,7 +57,7 @@ const EMOJIS = [
 	"🎄", "🩻", "🛟", "📌",
 	"⚛️", "🪐", "🚄", "🎋",
 	"🫂", "🏹",
-	"😻", "🦄", "🪁", "🍬", "🦔", "🚴", "🧗", "🐨",
+	"😻", "🦄", "🪁", "🍬", "🦔", "🚴", "🧗", "🐨", "🌚",
 ];
 const EMOJIS_SQUARES = [ "⬛", "⬜", "🟥", "🟦", "🟧", "🟨", "🟩", "🟪", "🟫" ];
 const EMOJIS_PARTY = [ "🥳", "🎊", "🎆", "🎉" ];
@@ -179,6 +179,13 @@ function refreshEmoji() {
 		if (isHidden(tile)) {
 			setTile(tile, "hidden");
 			return;
+		}
+		if (tile.dataset.emoji == "🌚") {
+			const helper = document.createElement('span');
+			helper.classList.add('moonDogHelper');
+			tile.replaceChildren(helper);
+		} else {
+			tile.replaceChildren();
 		}
 		setTile(tile, tile.dataset.type);
 		return;

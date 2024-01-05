@@ -1,0 +1,12 @@
+.moonDogHelper::after {
+	content: "🐶";
+	z-index: 100;
+	font-size: smaller;
+}
+.gridItem .moonDogHelper::after {
+	position: absolute;
+	left: 1vh;
+}
+.gridItem .hidden .moonDogHelper::after {
+	content: "";
+}
