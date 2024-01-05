@@ -36,7 +36,7 @@ function startGame() {
 		tile.onclick = (e) => {
 			console.log("Clicked on ", i, j, tile);
 			openTile(tile);
-			checkWinningCondition(i, j, tile);
+			checkWinningCondition(i, j);
 		};
 	});
 }
@@ -237,28 +237,28 @@ function winAnimationByWinDistance(winI, winJ, winDistanceFn) {
 }
 
 const WIN_ANIMATIONS = [
-	function (winI, winJ, winTile) {
+	function (winI, winJ) {
 		winAnimationByWinDistance(winI, winJ, secondDistance);
 	},
-	function (winI, winJ, winTile) {
+	function (winI, winJ) {
 		winAnimationByWinDistance(winI, winJ, manhattanDistance);
 	},
-	function (winI, winJ, winTile) {
+	function (winI, winJ) {
 		winAnimationByWinDistance(winI, winJ, squareCircleDistance);
 	},
 ];
 
-function winGame(i, j, tile) {
+function winGame(i, j) {
 	console.log("Won.");
 	let winAnimation = randomInArray(WIN_ANIMATIONS);
-	winAnimation(i, j, tile);
+	winAnimation(i, j);
 	console.log("Refresh for next game");
 }
 
-function checkWinningCondition(i, j, tile) {
+function checkWinningCondition(i, j) {
 	const stillHidden = countHidden();
 	if (stillHidden == 0) {
-		winGame(i, j, tile);
+		winGame(i, j);
 	}
 }
 
