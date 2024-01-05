@@ -210,45 +210,39 @@ function flipDownPartyFlipUp(partyEmoji, tile) {
 	}, 500);
 }
 
+function secondDistance(ignored1, ignored2, i2, j2) {
+	return i2 + j2;
+}
 function manhattanDistance(i1, j1, i2, j2) {
 	return Math.abs(i1 - i2) + Math.abs(j1 - j2);
 }
 
-const WIN_ANIMATIONS = [
-	function () {
-		const partyEmoji = randomInArray(EMOJIS_PARTY);
-		let animationMultiplier = 200;
-		if (DEBUG) {
-			animationMultiplier = 1000;
-		}
-		g.forEnumeratedTiles((i, j, tile) => {
-			disableClicks(tile);
-			setTimeout(() => {
-				flipDownPartyFlipUp(partyEmoji, tile);
-			}, (i + j) * animationMultiplier + 500);
-		});
+function winAnimationByWinDistance(winI, winJ, winDistanceFn) {
+	const partyEmoji = randomInArray(EMOJIS_PARTY);
+	let animationMultiplier = 200;
+	if (DEBUG) {
+		animationMultiplier = 1000;
+	}
+	g.forEnumeratedTiles((i, j, tile) => {
+		disableClicks(tile);
+		setTimeout(() => {
+			flipDownPartyFlipUp(partyEmoji, tile);
+		}, winDistanceFn(winI, winJ, i, j) * animationMultiplier + 500);
+	});
+}
 
+const WIN_ANIMATIONS = [
+	function (winI, winJ, winTile) {
+		winAnimationByWinDistance(winI, winJ, secondDistance);
 	},
 	function (winI, winJ, winTile) {
-		const partyEmoji = randomInArray(EMOJIS_PARTY);
-		let animationMultiplier = 200;
-		if (DEBUG) {
-			animationMultiplier = 1000;
-		}
-		g.forAllTiles(tile => {
-			disableClicks(tile);
-		});
-		g.forEnumeratedTiles((i, j, tile) => {
-			setTimeout(() => {
-				flipDownPartyFlipUp(partyEmoji, tile);
-			}, manhattanDistance(winI, winJ, i, j) * animationMultiplier + 500);
-		});
-	}
+		winAnimationByWinDistance(winI, winJ, manhattanDistance);
+	},
 ];
 
 function winGame(i, j, tile) {
 	console.log("Won.");
-	const winAnimation = randomInArray(WIN_ANIMATIONS);
+	let winAnimation = randomInArray(WIN_ANIMATIONS);
 	winAnimation(i, j, tile);
 	console.log("Refresh for next game");
 }
