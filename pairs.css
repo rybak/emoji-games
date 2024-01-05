@@ -48,3 +48,6 @@
 .gridItem .frontUp .back {
 	transform: rotateY(180deg);
 }
+#controls button {
+	font-size: 200%;
+}
