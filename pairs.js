@@ -82,6 +82,14 @@ function replaceCard(tile, emoji, squareEmoji) {
 	const frontEmoji = document.createElement('div');
 	frontEmoji.classList.add('frontEmoji');
 	frontEmoji.append(emoji);
+
+	if (emoji == "🌚") {
+		const helper = document.createElement('div');
+		helper.classList.add('moonDogHelper');
+		frontEmoji.style = "position:relative;";
+		frontEmoji.append(helper);
+	}
+
 	const frontBackground = document.createElement('div');
 	frontBackground.classList.add('frontBackground');
 	frontBackground.append(squareEmoji);

@@ -1,15 +1,16 @@
-/* TODO restore moondog emoji */
 .moonDogHelper::after {
 	content: "🐶";
 	z-index: 100;
 	font-size: smaller;
 }
-.gridItem .moonDogHelper::after {
+.gridItem .moonDogHelper {
+	/* position & top to overlay */
 	position: absolute;
-	left: 1vh;
-}
-.gridItem .hidden .moonDogHelper::after {
-	content: "";
+	top: 0;
+	/* display, justify, and width to center the dog */
+	display: flex;
+	justify-content: center;
+	width: 100%;
 }
 
 /* align the cards on the tiles on the grid */
