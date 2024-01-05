@@ -18,7 +18,6 @@ let g;
 const GRID_ROWS = 6;
 const GRID_COLUMNS = 5;
 const EMOJI_STYLESHEET_ID = 'theEmojiStylesheet';
-const DEBUG_SHUFFLING = false;
 
 /**
  * Array of opened tiles, which are still in play.
@@ -33,21 +32,13 @@ function startGame() {
 	}
 	generatePairs(pairsNeeded);
 
-	refreshEmoji();
 	g.forEnumeratedTiles((i, j, tile) => {
 		tile.onclick = (e) => {
 			console.log("Clicked on ", i, j, tile);
 			openTile(tile);
 			checkWinningCondition(pairsNeeded);
-			refreshEmoji();
 		};
 	});
-	if (DEBUG_SHUFFLING) {
-		g.forAllTiles(tile => {
-			tile.dataset.hidden = false;
-		});
-		refreshEmoji();
-	}
 }
 
 const EMOJIS = [
@@ -85,11 +76,21 @@ function randomInArray(a) {
 	return a[Math.floor(Math.random() * a.length)];
 }
 
-function generateRandomEmojiStyle(emojis, className) {
-	const emoji = randomInArray(emojis);
-	return `.gridItem .${className}::after {
-		content: "${emoji}";
-	}`;
+function replaceCard(tile, emoji, squareEmoji) {
+	hideTile(tile);
+	const front = document.createElement('div');
+	const frontEmoji = document.createElement('div');
+	frontEmoji.classList.add('frontEmoji');
+	frontEmoji.append(emoji);
+	const frontBackground = document.createElement('div');
+	frontBackground.classList.add('frontBackground');
+	frontBackground.append(squareEmoji);
+	front.classList.add('front');
+	const back = document.createElement('div');
+	back.classList.add('back');
+	back.append(squareEmoji);
+	front.append(frontEmoji, frontBackground);
+	tile.replaceChildren(front, back);
 }
 
 function generatePairs(pairsNeeded) {
@@ -112,38 +113,28 @@ function generatePairs(pairsNeeded) {
 		tile.dataset.hidden = true;
 		i++;
 	});
-	let style = '';
+	const squareEmoji = randomInArray(EMOJIS_SQUARES);
 	g.forAllTiles(tile => {
-		const cssClassName = tile.dataset.type;
 		const emojiIndex = getNumberFromTile(tile);
 		const emoji = shuffledEmojis[emojiIndex];
-		style += `.gridItem .${cssClassName}::after {
-			content: "${emoji}";
-		}`;
+		replaceCard(tile, emoji, squareEmoji);
 	});
-	style += generateRandomEmojiStyle(EMOJIS_SQUARES, "hidden");
-	style += generateRandomEmojiStyle(EMOJIS_PARTY, "party");
-	const styleSheet = getStyleSheet(EMOJI_STYLESHEET_ID);
-	styleSheet.innerText = style;
 }
 
 function openTile(tile) {
-	console.debug("Opened before:", openedTiles);
 	if (!isHidden(tile) || openedTiles.includes(tile)) {
 		return;
 	}
 	tile.dataset.hidden = false;
 	openedTiles.push(tile);
-	console.debug("Opened after:", openedTiles);
 	if (openedTiles.length > 2) {
 		while (openedTiles.length > 2) {
 			extraOpenedTile = openedTiles[0];
 			console.log("Too many opened tiles:", extraOpenedTile);
 			hideTile(extraOpenedTile);
 		}
-		refreshEmoji();
 	}
-	refreshEmoji();
+	tile.classList.add('frontUp');
 	if (openedTiles.length == 2) {
 		if (openedTiles[0].dataset.emoji == openedTiles[1].dataset.emoji) {
 			const type = openedTiles[0].dataset.type;
@@ -159,12 +150,12 @@ function openTile(tile) {
 	const timeoutId = setTimeout(() => {
 		console.log("Opened for too long, hiding:", tile);
 		hideTile(tile)
-		refreshEmoji();
 	}, 2000);
 	tile.dataset.timeoutId = timeoutId;
 }
 
 function hideTile(tile) {
+	tile.classList.remove('frontUp');
 	const foundIndex = openedTiles.indexOf(tile);
 	if (foundIndex > -1) {
 		openedTiles.splice(foundIndex, 1);
@@ -172,24 +163,6 @@ function hideTile(tile) {
 	tile.dataset.hidden = true;
 	clearTimeout(tile.dataset.timeoutId);
 	delete tile.dataset.timeoutId;
-}
-
-function refreshEmoji() {
-	g.forAllTiles(tile => {
-		if (isHidden(tile)) {
-			setTile(tile, "hidden");
-			return;
-		}
-		if (tile.dataset.emoji == "🌚") {
-			const helper = document.createElement('span');
-			helper.classList.add('moonDogHelper');
-			tile.replaceChildren(helper);
-		} else {
-			tile.replaceChildren();
-		}
-		setTile(tile, tile.dataset.type);
-		return;
-	});
 }
 
 function isHidden(tile) {
@@ -221,11 +194,23 @@ function getNumberFromTile(tile) {
 
 function winGame() {
 	console.log("Won.");
-	g.forAllTiles(tile => {
-		tile.dataset.type = "party";
+	const partyEmoji = randomInArray(EMOJIS_PARTY);
+	let animationMultiplier = 200;
+	if (DEBUG) {
+		animationMultiplier = 1000;
+	}
+	g.forEnumeratedTiles((i, j, tile) => {
 		disableClicks(tile);
+		setTimeout(() => {
+			tile.classList.remove('frontUp');
+			setTimeout(() => {
+				tile.querySelector('.frontEmoji').replaceChildren(document.createTextNode(partyEmoji));
+			}, 200);
+			setTimeout(() => {
+				tile.classList.add('frontUp');
+			}, 500);
+		}, (i + j) * animationMultiplier);
 	});
-	refreshEmoji();
 	console.log("Refresh for next game");
 }
 

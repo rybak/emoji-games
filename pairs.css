@@ -1,3 +1,4 @@
+/* TODO restore moondog emoji */
 .moonDogHelper::after {
 	content: "🐶";
 	z-index: 100;
@@ -9,4 +10,42 @@
 }
 .gridItem .hidden .moonDogHelper::after {
 	content: "";
+}
+
+/* align the cards on the tiles on the grid */
+.gridItem {
+	text-align: center;
+}
+
+/* the emoji on card's face is smaller than the card itself */
+.front .frontEmoji {
+	font-size: 80%;
+}
+/* align the backdrop of the card's face with the card */
+.front .frontBackground {
+	font-size: 100%;
+	width: 100%;
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: -100;
+}
+
+/*
+ * 3D-flip CSS code adapted from https://stackoverflow.com/a/41462226/1083697
+ */
+.front,
+.back {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	transition: transform 0.5s;
+	backface-visibility: hidden;
+	transform-style: preserve-3d;
+}
+.gridItem .frontUp .front {
+	transform: rotateY(360deg);
+}
+.gridItem .frontUp .back {
+	transform: rotateY(180deg);
 }

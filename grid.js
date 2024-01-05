@@ -46,7 +46,7 @@ class Grid {
 		this.forGrid((i, j) => {
 			cells[i].push(document.createElement('td'));
 			rows[i].append(cells[i][j]);
-			const newTile = document.createElement('span');
+			const newTile = document.createElement('div');
 			this.#grid[i][j] = newTile;
 			const gridItem = document.createElement('div');
 			gridItem.className = 'gridItem';
