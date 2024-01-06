@@ -25,7 +25,7 @@ const EMOJI_STYLESHEET_ID = 'theEmojiStylesheet';
 let openedTiles = [];
 
 function startGame() {
-	const pairsNeeded = g.getRowCount() * g.getColumnCount() / 2;
+	const pairsNeeded = g.getCellCount() / 2;
 	if (EMOJIS.length < pairsNeeded) {
 		console.error("Not enough emojis in " + EMOJIS);
 		return;
@@ -247,7 +247,7 @@ const WIN_ANIMATIONS = [
 	function (winI, winJ) {
 		const partyEmoji = randomInArray(EMOJIS_PARTY);
 		let animationMultiplier = 50;
-		const size = g.getRowCount() * g.getColumnCount();
+		const size = g.getCellCount();
 		g.forEnumeratedTiles((i, j, tile) => {
 			let n;
 			disableClicks(tile);

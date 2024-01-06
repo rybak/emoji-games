@@ -123,6 +123,10 @@ class Grid {
 		return this.#columnCount;
 	}
 
+	getCellCount() {
+		return this.getRowCount() * this.getColumnCount();
+	}
+
 	forTile(i, j, f) {
 		if (i < 0 || j < 0 || i >= this.#rowCount || j >= this.#columnCount) {
 			return;
