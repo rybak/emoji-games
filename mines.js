@@ -165,7 +165,12 @@ function flipFlag(tile, mineCount) {
 	} else {
 		tile.dataset.flagged = true;
 	}
-	mineCounterRenrerer.render(mineCount - countFlaggedTiles());
+	const unflaggedMineCount = mineCount - countFlaggedTiles();
+	if (unflaggedMineCount >= 0) {
+		mineCounterRenrerer.render(unflaggedMineCount);
+	} else {
+		mineCounterRenrerer.renderScaryZero();
+	}
 }
 
 function openNeighborsAroundNumber(i, j, tile, mineCount) {
