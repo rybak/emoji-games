@@ -27,6 +27,7 @@ class Grid {
 	#grid = [];
 
 	constructor(rowCount, columnCount, table) {
+		table.innerHTML = "";
 		this.#rowCount = rowCount;
 		this.#columnCount = columnCount;
 		/**

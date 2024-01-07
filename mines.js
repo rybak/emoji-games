@@ -18,8 +18,17 @@ const GRID_COLUMNS = 10;
 const GRID_ROWS = 10;
 let g;
 
-function startGame() {
-	const mineCount = generateMines();
+const EASY_DIFFICULTY = [10, 9, 9]; // 10 mines on 9x9 grid -- MS Minesweeper and minesweeper.online
+const NORMAL_DIFFICULTY = [40, 16, 16];
+const HARD_DIFFICULTY = [99, 16, 30];
+
+function startGame(difficulty) {
+	const table = document.getElementById('gridContainer');
+	const mineCount = difficulty[0];
+	const rowsCount = difficulty[1];
+	const columnCount = difficulty[2];
+	g = new Grid(rowsCount, columnCount, table);
+	generateMines(mineCount);
 	console.log("Starting with " + mineCount + " mines.");
 
 	refreshEmoji();
@@ -40,21 +49,23 @@ function startGame() {
 	});
 }
 
-function generateMines() {
-	let count = 0;
+function generateMines(mineCount) {
+	const size = g.getCellCount();
+	const a = new Array(size).fill(false);
+	for (let i = 0; i < mineCount; i++) {
+		a[i] = true;
+	}
+	shuffle(a);
+	let i = 0;
 	g.forAllTiles(tile => {
 		tile.dataset.type = "unopened";
 		tile.dataset.hidden = true;
 		delete tile.dataset.flagged;
-		if (count >= 10) {
-			return;
-		}
-		if (Math.random() > 0.9) {
+		if (a[i]) {
 			tile.dataset.type = "mine";
-			count++;
 		}
+		i++;
 	});
-	return count;
 }
 
 function updateTileNumber(i, j, tile) {
@@ -251,7 +262,5 @@ function checkWinningCondition(mineCount) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-	const table = document.getElementById('gridContainer');
-	g = new Grid(GRID_ROWS, GRID_COLUMNS, table);
-	startGame();
+	startGame(EASY_DIFFICULTY);
 });
