@@ -1,3 +1,8 @@
 #controls button {
 	font-size: 200%;
 }
+#controls {
+	display: flex;
+	flex-direction: row;
+	gap: 1em;
+}

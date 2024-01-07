@@ -15,6 +15,7 @@
  */
 
 let g;
+let timer;
 const GRID_ROWS = 6;
 const GRID_COLUMNS = 5;
 
@@ -24,6 +25,7 @@ const GRID_COLUMNS = 5;
 let openedTiles = [];
 
 function startGame() {
+	timer.reset();
 	const pairsNeeded = g.getCellCount() / 2;
 	if (EMOJIS.length < pairsNeeded) {
 		console.error("Not enough emojis in " + EMOJIS);
@@ -113,6 +115,9 @@ function openTile(tile) {
 	if (!isHidden(tile) || openedTiles.includes(tile)) {
 		return;
 	}
+	if (!timer.isGoing()) {
+		timer.start();
+	}
 	tile.dataset.hidden = false;
 	openedTiles.push(tile);
 	if (openedTiles.length > 2) {
@@ -180,10 +185,10 @@ function getNumberFromTile(tile) {
 	return parseInt(tile.dataset.type.slice(6));
 }
 
-function flipDownPartyFlipUp(partyEmoji, tile, upDelay) {
+function flipDownEmojiFlipUp(emoji, tile, upDelay) {
 	tile.classList.remove('frontUp');
 	setTimeout(() => {
-		tile.querySelector('.frontEmoji').replaceChildren(document.createTextNode(partyEmoji));
+		tile.querySelector('.frontEmoji').replaceChildren(document.createTextNode(emoji));
 	}, 200);
 	setTimeout(() => {
 		tile.classList.add('frontUp');
@@ -207,8 +212,7 @@ function crossDistance(i1, j1, i2, j2) {
 	return Math.min(horizontal, vertical);
 }
 
-function winAnimationByWinDistance(winI, winJ, winDistanceFn, multiplier) {
-	const partyEmoji = randomInArray(EMOJIS_PARTY);
+function emojiFlipAnimationByTile(emoji, multiplier, tileFn) {
 	let animationMultiplier = 200 * multiplier;
 	if (DEBUG) {
 		animationMultiplier = 1000 * multiplier;
@@ -216,8 +220,15 @@ function winAnimationByWinDistance(winI, winJ, winDistanceFn, multiplier) {
 	g.forEnumeratedTiles((i, j, tile) => {
 		disableClicks(tile);
 		setTimeout(() => {
-			flipDownPartyFlipUp(partyEmoji, tile, 300);
-		}, winDistanceFn(winI, winJ, i, j) * animationMultiplier + 500);
+			flipDownEmojiFlipUp(emoji, tile, 300);
+		}, tileFn(i, j) * animationMultiplier + 500);
+	});
+}
+
+function winAnimationByWinDistance(winI, winJ, winDistanceFn, multiplier) {
+	const partyEmoji = randomInArray(EMOJIS_PARTY);
+	emojiFlipAnimationByTile(partyEmoji, multiplier, (i, j) => {
+		return winDistanceFn(winI, winJ, i, j);
 	});
 }
 
@@ -282,17 +293,24 @@ const WIN_ANIMATIONS = [
 				tile.append(debug);
 			}
 			setTimeout(() => {
-				flipDownPartyFlipUp(partyEmoji, tile, 500);
+				flipDownEmojiFlipUp(partyEmoji, tile, 500);
 			}, (Math.pow(n, 0.9) * animationMultiplier) + 100);
 		});
 	},
 ];
 
 function winGame(i, j) {
+	timer.stop();
 	console.log("Won.");
 	let winAnimation = randomInArray(WIN_ANIMATIONS);
 	winAnimation(i, j);
 	console.log("Refresh for next game");
+}
+
+function loseGame() {
+	console.log("Lost");
+	const lostEmoji = randomInArray(["🫤", "😵"]);
+	emojiFlipAnimationByTile(lostEmoji, 1, (i, j) => i + j);
 }
 
 function checkWinningCondition(i, j) {
@@ -352,5 +370,14 @@ document.addEventListener('DOMContentLoaded', function () {
 	if (false) {
 		addSolver();
 	}
+	let gameDuration;
+	if (DEBUG) {
+		gameDuration = 10000;
+	} else {
+		gameDuration = 90000;
+	}
+	timer = new Timer(gameDuration, () => {
+		loseGame();
+	});
 	startGame();
 });
