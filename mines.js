@@ -26,7 +26,6 @@ function startGame() {
 	g.forEnumeratedTiles((i, j, tile) => {
 		tile.oncontextmenu = (e) => {
 			e.preventDefault();
-			console.log("Right-clicked on ", i, j, tile);
 			flipFlag(tile);
 			openNeighborsAroundNumber(i, j, tile, mineCount);
 			checkWinningCondition(mineCount);
@@ -34,7 +33,6 @@ function startGame() {
 			return;
 		};
 		tile.onclick = (e) => {
-			console.log("Clicked on ", i, j, tile);
 			openTile(i, j, tile, mineCount);
 			checkWinningCondition(mineCount);
 			refreshEmoji();
