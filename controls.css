@@ -1,5 +1,5 @@
-#controls button {
-	font-size: 200%;
+#controls, #controls button {
+	font-size: 2rem;
 }
 #controls {
 	display: flex;
