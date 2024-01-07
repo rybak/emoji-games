@@ -138,7 +138,7 @@ function countHidden() {
 function isFlagged(tile) {
 	return tile.dataset.flagged;
 }
-function countFlaggedMines(tile) {
+function countFlaggedMines() {
 	let count = 0;
 	g.forAllTiles(tile => {
 		if (isMine(tile) && isFlagged(tile)) {
