@@ -125,23 +125,23 @@ function isMine(tile) {
 function isHidden(tile) {
 	return tile.dataset.hidden == "true";
 }
+
 function countHidden() {
-	let count = 0;
-	g.forAllTiles(tile => {
-		if (isHidden(tile)) {
-			count++;
-		}
-	});
-	return count;
+	return countTilesPredicate(isHidden);
 }
 
 function isFlagged(tile) {
 	return tile.dataset.flagged;
 }
+
 function countFlaggedMines() {
+	return countTilesPredicate(tile => isMine(tile) && isFlagged(tile));
+}
+
+function countTilesPredicate(predicate) {
 	let count = 0;
 	g.forAllTiles(tile => {
-		if (isMine(tile) && isFlagged(tile)) {
+		if (predicate(tile)) {
 			count++;
 		}
 	});
