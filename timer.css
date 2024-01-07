@@ -1,0 +1,16 @@
+.animatedHourglass {
+	animation-duration: 8s;
+	animation-timing-function: steps(8, end);
+	animation-name: fullRotation;
+	animation-iteration-count: infinite;
+}
+
+@keyframes fullRotation {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
+}
