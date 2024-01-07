@@ -1,3 +1,7 @@
+.gridItem {
+	cursor: pointer;
+}
+
 .moonDogHelper::after {
 	content: "🐶";
 	z-index: 100;
