@@ -17,7 +17,6 @@
 let g;
 const GRID_ROWS = 6;
 const GRID_COLUMNS = 5;
-const EMOJI_STYLESHEET_ID = 'theEmojiStylesheet';
 
 /**
  * Array of opened tiles, which are still in play.
