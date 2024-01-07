@@ -45,6 +45,7 @@ class Timer {
 	}
 
 	reset() {
+		this.stop();
 		this.#milliseconds = this.#startingMilliseconds;
 		this.#updateRendering();
 	}
