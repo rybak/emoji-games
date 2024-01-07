@@ -7,15 +7,22 @@
 		<link rel="stylesheet" href="mines.css" type="text/css" />
 		<script src="random.js"></script>
 		<script src="grid.js"></script>
+		<script src="numberRenderer.js"></script>
 		<script src="mines.js"></script>
 		<title>Mines</title>
 	</head>
 	<body>
 		<table id="gridContainer"></table>
 		<div id="controls">
-			<button onclick="startGame(EASY_DIFFICULTY);">1️⃣</button>
-			<button onclick="startGame(NORMAL_DIFFICULTY);">2️⃣</button>
-			<button onclick="startGame(HARD_DIFFICULTY);">3️⃣</button>
+			<div>
+				<button onclick="startGame(EASY_DIFFICULTY);">1️⃣</button>
+				<button onclick="startGame(NORMAL_DIFFICULTY);">2️⃣</button>
+				<button onclick="startGame(HARD_DIFFICULTY);">3️⃣</button>
+			</div>
+			<div>
+				#️⃣💣🟰
+				<span id="mineCounter"></span>
+			</div>
 		</div>
 	</body>
 </html>

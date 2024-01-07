@@ -17,6 +17,7 @@
 const GRID_COLUMNS = 10;
 const GRID_ROWS = 10;
 let g;
+let mineCounterRenrerer;
 
 const EASY_DIFFICULTY = [10, 9, 9]; // 10 mines on 9x9 grid -- MS Minesweeper and minesweeper.online
 const NORMAL_DIFFICULTY = [40, 16, 16];
@@ -28,6 +29,8 @@ function startGame(difficulty) {
 	const rowsCount = difficulty[1];
 	const columnCount = difficulty[2];
 	g = new Grid(rowsCount, columnCount, table);
+	mineCounterRenrerer = new NumberRenderer(document.getElementById('mineCounter'), HARD_DIFFICULTY[0]);
+	mineCounterRenrerer.render(mineCount);
 	generateMines(mineCount);
 	console.log("Starting with " + mineCount + " mines.");
 
@@ -35,7 +38,7 @@ function startGame(difficulty) {
 	g.forEnumeratedTiles((i, j, tile) => {
 		tile.oncontextmenu = (e) => {
 			e.preventDefault();
-			flipFlag(tile);
+			flipFlag(tile, mineCount);
 			openNeighborsAroundNumber(i, j, tile, mineCount);
 			checkWinningCondition(mineCount);
 			refreshEmoji();
@@ -138,6 +141,10 @@ function countFlaggedMines() {
 	return countTilesPredicate(tile => isMine(tile) && isFlagged(tile));
 }
 
+function countFlaggedTiles() {
+	return countTilesPredicate(isFlagged);
+}
+
 function countTilesPredicate(predicate) {
 	let count = 0;
 	g.forAllTiles(tile => {
@@ -147,7 +154,8 @@ function countTilesPredicate(predicate) {
 	});
 	return count;
 }
-function flipFlag(tile) {
+
+function flipFlag(tile, mineCount) {
 	if (!isHidden(tile)) {
 		// don't do anything with uncovered number or empty tile
 		return;
@@ -157,6 +165,7 @@ function flipFlag(tile) {
 	} else {
 		tile.dataset.flagged = true;
 	}
+	mineCounterRenrerer.render(mineCount - countFlaggedTiles());
 }
 
 function openNeighborsAroundNumber(i, j, tile, mineCount) {
