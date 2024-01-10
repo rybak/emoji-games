@@ -52,7 +52,7 @@ const EMOJIS = [
 	"😻", "🦄", "🪁", "🍬", "🦔", "🚴", "🧗", "🐨", "🌚",
 ];
 const EMOJIS_SQUARES = [ "⬛", "⬜", "🟥", "🟦", "🟧", "🟨", "🟩", "🟪", "🟫" ];
-const EMOJIS_PARTY = [ "🥳", "🎊", "🎆", "🎉" ];
+const EMOJIS_PARTY = [ "🥳", "🎊", "🎆", "🎉", "🌼" ];
 
 function doubled(originalArray) {
 	return [...originalArray, ...originalArray];
