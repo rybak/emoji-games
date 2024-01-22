@@ -46,3 +46,6 @@
 .gridItem .dead::after {
 	content: "💀";
 }
+.gridItem .wrong::after {
+	content: "❌";
+}

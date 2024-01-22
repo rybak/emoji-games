@@ -234,11 +234,23 @@ function loseGame(tile) {
 	tile.dataset.type = "exploded";
 	console.log("Lost.");
 	g.forEnumeratedTiles((i, j, tile) => {
-		tile.dataset.hidden = false;
+		if (isFlagged(tile)) {
+			if (isMine(tile)) {
+				// preserve correct flag as a hidden tile
+			} else {
+				// show wrong flags to the player
+				tile.dataset.type = "wrong";
+				tile.dataset.hidden = false;
+			}
+		} else {
+			// simply uncover everything else
+			tile.dataset.hidden = false;
+		}
 		if (tile.dataset.type == "unopened") {
 			updateTileNumber(i, j, tile);
 		}
 		if (tile.dataset.type == mineNumberToCssClass(0)) {
+			// show fancy game over "screen"
 			tile.dataset.type = "dead";
 		}
 		disableClicks(tile);
