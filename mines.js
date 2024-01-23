@@ -45,11 +45,15 @@ function startGame(difficulty) {
 			return;
 		};
 		tile.onclick = (e) => {
-			openTile(i, j, tile, mineCount);
-			checkWinningCondition(mineCount);
-			refreshEmoji();
+			actualClick(i, j, tile, mineCount);
 		};
 	});
+}
+
+function actualClick(i, j, tile, mineCount) {
+	openTile(i, j, tile, mineCount);
+	checkWinningCondition(mineCount);
+	refreshEmoji();
 }
 
 function generateMines(mineCount) {
