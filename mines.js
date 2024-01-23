@@ -235,7 +235,7 @@ function propagateEmpty(i, j) {
 		if (isMine(neighbor)) {
 			return;
 		}
-		neighbor.dataset.hidden = false;
+		openTileInternal(neighbor);
 		const n = updateTileNumber(r, c, neighbor);
 		if (n == 0) {
 			propagateEmpty(r, c);
