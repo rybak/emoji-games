@@ -105,8 +105,7 @@ function updateTileNumber(i, j, tile) {
 }
 
 function openTile(i, j, tile, mineCount) {
-	tile.dataset.hidden = false;
-	delete tile.dataset.flagged;
+	openTileInternal(tile);
 	if (isMine(tile)) {
 		loseGame(tile);
 		return;
@@ -118,6 +117,11 @@ function openTile(i, j, tile, mineCount) {
 	if (count == 0) {
 		propagateEmpty(i, j);
 	}
+}
+
+function openTileInternal(tile) {
+	tile.dataset.hidden = false;
+	delete tile.dataset.flagged;
 }
 
 function refreshEmoji() {
