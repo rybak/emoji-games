@@ -44,7 +44,12 @@ function startGame(difficulty) {
 			refreshEmoji();
 			return;
 		};
+		/*
+		 * set up temporary click listeners, which will
+		 * be replaced later in ensureGoodFirstMove()
+		 */
 		tile.onclick = (e) => {
+			ensureGoodFirstMove(i, j, tile, mineCount);
 			actualClick(i, j, tile, mineCount);
 		};
 	});
@@ -54,6 +59,21 @@ function actualClick(i, j, tile, mineCount) {
 	openTile(i, j, tile, mineCount);
 	checkWinningCondition(mineCount);
 	refreshEmoji();
+}
+
+function ensureGoodFirstMove(firstI, firstJ, firstOpenedTile, mineCount) {
+	let tryCount = 0;
+	while (isMine(firstOpenedTile) || countNeighborMines(firstI, firstJ) != 0) {
+		tryCount++;
+		console.info("Regenerating mines. Try #" + tryCount);
+		generateMines(mineCount);
+	}
+	// set up actual click listeners
+	g.forEnumeratedTiles((i, j, tile) => {
+		tile.onclick = (e) => {
+			actualClick(i, j, tile, mineCount);
+		};
+	});
 }
 
 function generateMines(mineCount) {
