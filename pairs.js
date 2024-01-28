@@ -202,7 +202,12 @@ function getNumberFromTile(tile) {
 function flipDownEmojiFlipUp(emoji, tile, upDelay) {
 	tile.classList.remove('frontUp');
 	setTimeout(() => {
-		tile.querySelector('.card .regularEmojiHolder').replaceChildren(document.createTextNode(emoji));
+		const card = tile.querySelector('.front .card');
+		card.children[1].replaceChildren(document.createTextNode(emoji));
+		if (card.children.length >= 3) {
+			// get rid of text inside .overlayEmojiHolder
+			card.children[2].replaceChildren();
+		}
 	}, 200);
 	setTimeout(() => {
 		tile.classList.add('frontUp');
@@ -386,7 +391,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 	let gameDuration;
 	if (DEBUG) {
-		gameDuration = 10000;
+		gameDuration = 5000;
 	} else {
 		gameDuration = 90000;
 	}
