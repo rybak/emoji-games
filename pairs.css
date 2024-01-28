@@ -2,35 +2,29 @@
 	cursor: pointer;
 }
 
-.moonDogHelper::after {
-	content: "🐶";
-	z-index: 100;
-	font-size: smaller;
-}
-.gridItem .moonDogHelper {
-	/* position & top to overlay */
-	position: absolute;
-	top: 0;
-	/* display, justify, and width to center the dog */
+/* positioning and sizing of emoji holders */
+.card {
+	position: relative;
+	width: 1em;
+	height: 1em;
 	display: flex;
 	justify-content: center;
-	width: 100%;
+	align-items: center;
 }
-
-/* the emoji on card's face is smaller than the card itself */
-.front .frontEmoji {
-	font-size: 80%;
-	width: 80%;
-	margin: auto;
-}
-/* align the backdrop of the card's face with the card */
-.front .frontBackground {
-	font-size: 100%;
-	width: 100%;
+.card span {
 	position: absolute;
-	left: 0;
-	top: 0;
-	z-index: -100;
+}
+.card .backgroundEmojiHolder {
+	z-index: 1;
+}
+.card .regularEmojiHolder {
+	z-index: 2;
+	/* the emoji on card's face is smaller than the card itself */
+	font-size: 80%;
+}
+.card .overlayEmojiHolder {
+	z-index: 3;
+	font-size: 60%; /* to fit inside the moon emoji */
 }
 
 /*
@@ -42,8 +36,6 @@
 .front,
 .back {
 	position: absolute; /* needed to put the front and back sides of the card on top of each other */
-	width: 100%;
-	height: 100%;
 	transition: transform 0.5s;
 	backface-visibility: hidden;
 	transform-style: preserve-3d;

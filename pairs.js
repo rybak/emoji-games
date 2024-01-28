@@ -58,28 +58,42 @@ function doubled(originalArray) {
 	return [...originalArray, ...originalArray];
 }
 
+function createEmojiHolder(className, emoji) {
+	const res = document.createElement('span');
+	res.classList.add(className);
+	res.replaceChildren(document.createTextNode(emoji));
+	return res;
+}
+
+function createCard(emojis) {
+	const card = document.createElement('div');
+	card.classList.add('card');
+	if (emojis.length >= 1) {
+		card.append(createEmojiHolder('backgroundEmojiHolder', emojis[0]));
+	}
+	if (emojis.length >= 2) {
+		card.append(createEmojiHolder('regularEmojiHolder', emojis[1]));
+	}
+	if (emojis.length >= 3) {
+		card.append(createEmojiHolder('overlayEmojiHolder', emojis[2]));
+	}
+	return card;
+}
+
 function replaceCard(tile, emoji, squareEmoji) {
 	hideTile(tile);
 	const front = document.createElement('div');
-	const frontEmoji = document.createElement('div');
-	frontEmoji.classList.add('frontEmoji');
-	frontEmoji.append(emoji);
-
-	if (emoji == "🌚") {
-		const helper = document.createElement('div');
-		helper.classList.add('moonDogHelper');
-		frontEmoji.style = "position:relative;";
-		frontEmoji.append(helper);
-	}
-
-	const frontBackground = document.createElement('div');
-	frontBackground.classList.add('frontBackground');
-	frontBackground.append(squareEmoji);
 	front.classList.add('front');
+	/* front face has two or three emoji glyphs */
+	const frontEmojis = [squareEmoji, emoji];
+	if (emoji == "🌚") {
+		frontEmojis.push("🐶");
+	}
+	front.replaceChildren(createCard(frontEmojis));
 	const back = document.createElement('div');
 	back.classList.add('back');
-	back.append(squareEmoji);
-	front.append(frontEmoji, frontBackground);
+	/* back face has only one emoji glyph */
+	back.replaceChildren(createCard([squareEmoji]));
 	tile.replaceChildren(front, back);
 }
 
@@ -188,7 +202,7 @@ function getNumberFromTile(tile) {
 function flipDownEmojiFlipUp(emoji, tile, upDelay) {
 	tile.classList.remove('frontUp');
 	setTimeout(() => {
-		tile.querySelector('.frontEmoji').replaceChildren(document.createTextNode(emoji));
+		tile.querySelector('.card .regularEmojiHolder').replaceChildren(document.createTextNode(emoji));
 	}, 200);
 	setTimeout(() => {
 		tile.classList.add('frontUp');
