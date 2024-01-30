@@ -23,9 +23,11 @@ const GRID_COLUMNS = 5;
  * Array of opened tiles, which are still in play.
  */
 let openedTiles = [];
+let secretClickCount = 0;
 
 function startGame() {
 	timer.reset();
+	secretClickCount = 0;
 	const pairsNeeded = g.getCellCount() / 2;
 	if (EMOJIS.length < pairsNeeded) {
 		console.error("Not enough emojis in " + EMOJIS);
@@ -452,4 +454,10 @@ document.addEventListener('DOMContentLoaded', function () {
 		loseGame();
 	});
 	startGame();
+	timer.getHourglassElement().onclick = () => {
+		secretClickCount++;
+		if (secretClickCount == 7) {
+			addSolver();
+		}
+	};
 });

@@ -84,4 +84,8 @@ class Timer {
 	#updateRendering() {
 		this.#numberRenderer.render(this.#milliseconds / 1000);
 	}
+
+	getHourglassElement() {
+		return this.#hourglassElement;
+	}
 }
