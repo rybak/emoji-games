@@ -214,6 +214,16 @@ function flipDownEmojiFlipUp(emoji, tile, upDelay) {
 	}, 200 + upDelay);
 }
 
+function dotProduct(i1, j1, i2, j2) {
+	return i1 * i2 + j1 * j2;
+}
+
+function euclidDistance(i1, j1, i2, j2) {
+	const a = i2 - i1;
+	const b = j2 - j1;
+	return Math.sqrt(a * a + b * b);
+}
+
 function secondDistance(ignored1, ignored2, i2, j2) {
 	return i2 + j2;
 }
@@ -316,6 +326,49 @@ const WIN_ANIMATIONS = [
 			}, (Math.pow(n, 0.9) * animationMultiplier) + 1000);
 		});
 	},
+
+	/*
+	 * Radar animation
+	 */
+	function (winI, winJ) {
+		let farI = winI;
+		let farJ = winJ;
+		// special cases for edges of the grid
+		if (winI == 0) {
+			farJ = -100;
+		} else if (winJ == GRID_COLUMNS - 1) {
+			// confusing, because i-axis points down, unlike y-axis
+			farI = -100;
+		} else if (winJ == 0) {
+			farI = 100;
+		} else {
+			farJ = 100;
+		}
+		console.log(winI, winJ);
+		console.log(farI, farJ);
+		const x1 = farI - winI;
+		const y1 = farJ - winJ;
+		const multiplier = 1.5 - euclidDistance(2, 2, winI, winJ) / 7;
+		function radarDistance(i1, j1, i2, j2) {
+			if (i1 == i2 && j1 == j2) {
+				return 0;
+			}
+			const x2 = i2 - i1;
+			const y2 = j2 - j1;
+			const dot = dotProduct(x1, y1, x2, y2);
+			const det = x1 * y2 - y1 * x2;
+			const angle = Math.atan2(det, dot);
+			let fakeAngle = angle + Math.PI;
+			if (false) {
+				console.info(i2, j2, angle, fakeAngle * 180/Math.PI);
+				g.forTile(i2, j2, tile => {
+					tile.title = angle + " " + fakeAngle;
+				});
+			}
+			return fakeAngle;
+		}
+		winAnimationByWinDistance(winI, winJ, radarDistance, multiplier);
+	}
 ];
 
 function winGame(i, j) {
@@ -371,8 +424,8 @@ function addSolver() {
 			}
 		});
 		setTimeout(() => {
-			const i = randomZeroTo(g.getRowCount());
-			const j = randomZeroTo(g.getColumnCount());
+			let i = randomZeroTo(g.getRowCount());
+			let j = randomZeroTo(g.getColumnCount());
 			checkWinningCondition(i, j);
 		}, count * animationMultiplier + 200);
 	};
