@@ -313,7 +313,7 @@ const WIN_ANIMATIONS = [
 			}
 			setTimeout(() => {
 				flipDownEmojiFlipUp(partyEmoji, tile, 500);
-			}, (Math.pow(n, 0.9) * animationMultiplier) + 100);
+			}, (Math.pow(n, 0.9) * animationMultiplier) + 1000);
 		});
 	},
 ];
