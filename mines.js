@@ -317,4 +317,5 @@ function checkWinningCondition(mineCount) {
 
 document.addEventListener('DOMContentLoaded', function () {
 	startGame(EASY_DIFFICULTY);
+	addFontControl("💣🚩");
 });
