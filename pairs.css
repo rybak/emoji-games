@@ -20,7 +20,7 @@
 .card .regularEmojiHolder {
 	z-index: 2;
 	/* the emoji on card's face is smaller than the card itself */
-	font-size: 80%;
+	font-size: 75%;
 }
 .card .overlayEmojiHolder {
 	z-index: 3;

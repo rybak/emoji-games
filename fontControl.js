@@ -3,7 +3,8 @@ const FONT_CONTROL_CLASS = "fontControl";
 const FONT_FAMILIES = [
 	'OpenMoji',
 	'Noto Color Emoji',
-	'Segoe UI Emoji'
+	'"Noto Emoji", "Noto Color Emoji"',
+	'Segoe UI Emoji',
 ];
 
 function createOption(fontFamily) {
