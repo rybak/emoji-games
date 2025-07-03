@@ -1,4 +1,4 @@
 @font-face {
-	font-family: "OpenMojiDemoFont";
-	src: url("https://github.com/hfg-gmuend/openmoji/raw/refs/heads/master/font/OpenMoji-color-glyf_colr_1/OpenMoji-color-glyf_colr_1.ttf") format("ttf");
+	font-family: OpenMoji;
+	src: url('https://raw.githubusercontent.com/hfg-gmuend/openmoji/refs/heads/master/font/OpenMoji-color-colr0_svg/OpenMoji-color-colr0_svg.woff2');
 }
