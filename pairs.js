@@ -242,6 +242,12 @@ function crossDistance(i1, j1, i2, j2) {
 	const vertical = Math.abs(j1 - j2);
 	return Math.min(horizontal, vertical);
 }
+function verticalFirst(i1, j1, i2, j2) {
+	return 0.2 * Math.abs(i1 - i2) + 3.5 * Math.abs(j1 - j2);
+}
+function horizontalFirst(i1, j1, i2, j2) {
+	return 2.5 * Math.abs(i1 - i2) + 0.1 * Math.abs(j1 - j2);
+}
 
 function emojiFlipAnimationByTile(emoji, multiplier, tileFn) {
 	let animationMultiplier = 200 * multiplier;
@@ -276,6 +282,12 @@ const WIN_ANIMATIONS = [
 	},
 	function (winI, winJ) {
 		winAnimationByWinDistance(winI, winJ, crossDistance, 2.5);
+	},
+	function (winI, winJ) {
+		winAnimationByWinDistance(winI, winJ, verticalFirst, 1.0);
+	},
+	function (winI, winJ) {
+		winAnimationByWinDistance(winI, winJ, horizontalFirst, 1.0);
 	},
 
 	/*
