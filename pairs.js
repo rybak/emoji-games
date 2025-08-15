@@ -264,9 +264,10 @@ function winAnimationByWinDistance(winI, winJ, winDistanceFn, multiplier) {
 }
 
 const WIN_ANIMATIONS = [
-	function (winI, winJ) {
-		winAnimationByWinDistance(winI, winJ, secondDistance, 1);
-	},
+// too similar to manhattanDistance, too boring
+//	function (winI, winJ) {
+//		winAnimationByWinDistance(winI, winJ, secondDistance, 1);
+//	},
 	function (winI, winJ) {
 		winAnimationByWinDistance(winI, winJ, manhattanDistance, 1.2);
 	},
