@@ -289,6 +289,15 @@ const WIN_ANIMATIONS = [
 	function (winI, winJ) {
 		winAnimationByWinDistance(winI, winJ, horizontalFirst, 1.0);
 	},
+	function (winI, winJ) {
+		winAnimationByWinDistance(winI, winJ, (i1, j1, i2, j2) => {
+			const md = manhattanDistance(i1, j1, i2, j2);
+			const odd = ((i1 + j1 + i2 + j2) % 2);
+			const even = ((i1 + j1 + i2 + j2 + 1) % 2);
+			console.info('odd', odd, 'even', even);
+			return (md % 2) * md + ((md + 1) % 2) * 2 * md;
+		}, 1.0);
+	},
 
 	/*
 	 * Spiral animation.
