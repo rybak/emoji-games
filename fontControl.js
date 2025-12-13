@@ -5,7 +5,9 @@ const FONT_FAMILIES = [
 	'Noto Color Emoji',
 	'"Noto Emoji", "Noto Color Emoji"',
 	'Segoe UI Emoji',
+	'Unifont, UnifontUpper',
 ];
+const FALLBACK = FONT_FAMILIES.join(', ');
 
 function createOption(fontFamily) {
 	const o = document.createElement('input');
@@ -17,7 +19,7 @@ function createOption(fontFamily) {
 	o.addEventListener("change", (event) => {
 		event.preventDefault();
 		console.log(fontFamily);
-		document.body.style.fontFamily = fontFamily;
+		document.body.style.fontFamily = fontFamily + ', ' + FALLBACK;
 	});
 	return o;
 }
