@@ -14,8 +14,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-const GRID_COLUMNS = 10;
-const GRID_ROWS = 10;
 let g;
 let mineCounterRenrerer;
 
