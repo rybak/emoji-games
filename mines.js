@@ -105,7 +105,7 @@ function updateTileNumber(i, j, tile) {
 function openTile(i, j, tile, mineCount) {
 	openTileInternal(tile);
 	if (isMine(tile)) {
-		loseGame(tile);
+		loseGame(i, j, tile);
 		return;
 	}
 	if (tile.dataset.type == "dead") {
@@ -256,33 +256,53 @@ function disableClicks(tile) {
 	tile.onclick = () => {};
 }
 
-function loseGame(tile) {
+function euclidDistance(i1, j1, i2, j2) {
+	const a = i2 - i1;
+	const b = j2 - j1;
+	return Math.sqrt(a * a + b * b);
+}
+const EUCLID_DELAY_MULTIPLIER = 150;
+function euclidDelay(i1, j1, i2, j2) {
+	return EUCLID_DELAY_MULTIPLIER * euclidDistance(i1, j1, i2, j2);
+}
+function euclidTimeout(i1, j1, i2, j2, f) {
+	return setTimeout(
+		f,
+		euclidDelay(i1, j1, i2, j2)
+	);
+}
+function loseGame(iLost, jLost, tile) {
 	tile.dataset.type = "exploded";
 	console.log("Lost.");
+	const lostTimeout = (i, j, f) => {
+		return euclidTimeout(iLost, jLost, i, j, f);
+	};
 	g.forEnumeratedTiles((i, j, tile) => {
-		if (isFlagged(tile)) {
-			if (isMine(tile)) {
-				// preserve correct flag as a hidden tile
+		lostTimeout(i, j, () => {
+			if (isFlagged(tile)) {
+				if (isMine(tile)) {
+					// preserve correct flag as a hidden tile
+				} else {
+					// show wrong flags to the player
+					tile.dataset.type = "wrong";
+					tile.dataset.hidden = false;
+				}
 			} else {
-				// show wrong flags to the player
-				tile.dataset.type = "wrong";
+				// simply uncover everything else
 				tile.dataset.hidden = false;
 			}
-		} else {
-			// simply uncover everything else
-			tile.dataset.hidden = false;
-		}
-		if (tile.dataset.type == "unopened") {
-			updateTileNumber(i, j, tile);
-		}
-		if (tile.dataset.type == mineNumberToCssClass(0)) {
-			// show fancy game over "screen"
-			tile.dataset.type = "dead";
-		}
+			if (tile.dataset.type == "unopened") {
+				updateTileNumber(i, j, tile);
+			}
+			if (tile.dataset.type == mineNumberToCssClass(0)) {
+				// show fancy game over "screen"
+				tile.dataset.type = "dead";
+			}
+			refreshEmoji();
+		});
 		disableClicks(tile);
 	});
-	refreshEmoji();
-	console.log("Refresh for next game");
+	console.log("Refreshing for next game...");
 }
 
 function mineNumberToCssClass(n) {
